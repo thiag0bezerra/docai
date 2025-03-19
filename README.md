@@ -34,7 +34,7 @@ A coleta dos dados foi realizada por meio de um crawler customizado que:
 
 ## 4. Armazenamento dos Dados
 
-Após a coleta, os arquivos PDF e seus metadados foram organizados e armazenados em uma pasta no Google Drive (ou serviço similar), facilitando o acesso e análises futuras. Essa organização também permite a manutenção e expansão do repositório, que contém um volume muito maior de arquivos do que o micro exemplo aqui ilustrado.
+Após a coleta, os arquivos PDF e seus metadados foram organizados e armazenados em uma pasta no Google Drive, facilitando o acesso e análises futuras. Essa organização também permite a manutenção e expansão do repositório, que contém um volume muito maior de arquivos do que o micro exemplo aqui ilustrado.
 
 ## 5. Layout Estruturado dos Dados
 
