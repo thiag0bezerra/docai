@@ -6,64 +6,67 @@
 - Matheus da Silva Nunes
 - Thiago Henrique Menêses Bezerra
 
+# Coleta e Documentação dos Dados PDF
 
-Este projeto tem como objetivo a extração estruturada de dados dos portais oficiais dos seguintes órgãos:
+## 1. Visão Geral
 
-- **Tribunal de Justiça de São Paulo (TJSP)**
-- **Tribunal Regional Federal da 5.ª Região (TRF5)**
-- **Justiça Federal no Ceará (JFCE)**
+Este projeto tem como objetivo realizar a coleta de arquivos PDF do site do TJSP, organizando-os para análises futuras. O processo envolve o crawling do site, o download dos recursos e a extração de metadados essenciais de cada arquivo, possibilitando a criação de um repositório robusto e estruturado.
 
-## Metodologia
+## 2. Descrição do Conjunto de Dados
 
-### 1. Identificação das Fontes
-- **Mapeamento das Páginas de Interesse:**  
-  São identificadas as páginas oficiais dos tribunais e órgãos relacionados, onde se encontram as informações relevantes para a extração.
+O conjunto de dados é composto pelas informações extraídas dos arquivos PDF baixados. A tabela a seguir descreve cada coluna do dataset:
 
-### 2. Extração Estruturada
-- **Bibliotecas Utilizadas:**  
-  Utilizamos as bibliotecas [httpx](https://www.python-httpx.org/) e [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) para a coleta e o parsing dos dados.
+| Nome da Coluna              | Descrição                                                                                                       | Exemplo                                                       |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| **URL (string)**            | Endereço completo do arquivo PDF.                                                                               | `https://www.tjsp.jus.br/recursos/documento.pdf`              |
+| **mime-type (string)**      | Tipo MIME do arquivo, geralmente `application/pdf` para arquivos PDF.                                           | `application/pdf`                                             |
+| **nato-digital (boolean)**  | Indica se o PDF foi gerado digitalmente (nascido digital) ou se foi digitalizado a partir de documento físico.     | `true`                                                        |
+| **numero-de-paginas (number)** | Número total de páginas presentes no PDF.                                                                    | `12`                                                          |
+| **megabytes (number)**      | Tamanho do arquivo PDF em megabytes.                                                                            | `1.8`                                                         |
 
-- **httpx:**  
-  Responsável por realizar as requisições HTTP de forma assíncrona (ou síncrona, conforme a necessidade), permitindo a obtenção rápida do conteúdo das páginas.
+## 3. Processo de Coleta
 
-- **BeautifulSoup:**  
-  Utilizada para analisar e extrair os dados a partir da estrutura HTML das páginas, facilitando a identificação de elementos como tabelas, listas e outros componentes relevantes.
+A coleta dos dados foi realizada por meio de um crawler customizado que:
 
-#### Exemplo de Código
+- **Navega e Extrai Links:** Utiliza ferramentas como Selenium, Helium e BeautifulSoup para identificar links internos que apontam para arquivos PDF.
+- **Realiza o Download:** Efetua o download dos arquivos, preservando a hierarquia de diretórios do site.
+- **Extrai Metadados:** Durante o download, são coletadas informações essenciais (URL, mime-type, status digital, número de páginas e tamanho do arquivo) para compor o dataset.
 
-```python
-import httpx
-from bs4 import BeautifulSoup
+## 4. Armazenamento dos Dados
 
-# URL de exemplo de uma página de um dos tribunais
-url = "https://www.exemplo.org.br/pagina-de-interesse"
+Após a coleta, os arquivos PDF e seus metadados foram organizados e armazenados em uma pasta no Google Drive (ou serviço similar), facilitando o acesso e análises futuras. Essa organização também permite a manutenção e expansão do repositório, que contém um volume muito maior de arquivos do que o micro exemplo aqui ilustrado.
 
-# Realizando a requisição HTTP utilizando httpx
-response = httpx.get(url)
-if response.status_code == 200:
-    # Fazendo o parsing do conteúdo HTML com BeautifulSoup
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Exemplo: extração de todos os links de uma seção específica
-    section = soup.find('div', {'id': 'secao-de-dados'})
-    if section:
-        links = section.find_all('a')
-        for link in links:
-            print(link.get('href'))
-else:
-    print(f"Erro ao acessar a página: {response.status_code}")
+## 5. Layout Estruturado dos Dados
+
+A estrutura dos dados segue uma hierarquia que reflete a organização do site do TJSP. A seguir, um exemplo simplificado da disposição dos arquivos:
+
+```
+C:\USERS\WINDOWS\DESKTOP\ICD\PROJETO\DATA\WWW.TJSP.JUS.BR
+├───Donwload
+│   └───Portal
+│       └───PrimeiraInstancia
+│           └───GestaoDocumental
+│               ├───Arquivo1.pdf
+│               ├───Arquivo2.pdf
+│               └───Arquivo3.pdf
+├───Download
+│   ├───acessibilidade
+│   │   └───(vários PDFs)
+│   ├───AssessoriaImprensa
+│   │   └───(vários PDFs)
+│   ├───Auxiliaresdajustica
+│   │   └───(vários PDFs)
+│   └───Biblioteca
+│       ├───AgendaCentoCinquenta
+│       │   └───(vários PDFs)
+│       └───Homenagem
+│           └───(vários PDFs)
 ```
 
-### 3. Tratamento dos Dados
-- **Limpeza e Normalização:**  
-  Após a extração, os dados passam por um processo de limpeza e normalização para remover inconsistências e formatações indesejadas.
-  
-- **Armazenamento:**  
-  As informações processadas são armazenadas em formato estruturado (por exemplo, JSON, CSV ou bancos de dados relacionais) para facilitar análises futuras.
+> **Observação:** Este é apenas um micro exemplo ilustrativo. O repositório final contém muitos outros diretórios e arquivos, organizados de forma a refletir a estrutura original do site.
 
-### 4. Respeito às Normas
-- **Cumprimento das Diretrizes:**  
-  Todas as extrações são realizadas em conformidade com as diretrizes de uso dos sites oficiais e a legislação vigente sobre acesso a dados públicos.  
-- **Ética e Legalidade:**  
-  O projeto respeita os limites impostos pelos Termos de Uso dos respectivos portais, garantindo que o acesso às informações seja feito de maneira ética e legal.
+## 6. Link do Dataset
+
+Acesse uma amostra do dataset através do link:  
+[https://drive.google.com/drive/folders/1QFVWyyXfoqQxdXrhPfplIQ9nu_Q5yFsK?usp=drive_link](https://drive.google.com/drive/folders/1QFVWyyXfoqQxdXrhPfplIQ9nu_Q5yFsK?usp=drive_link)
 
